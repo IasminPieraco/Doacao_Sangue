@@ -20,13 +20,13 @@ const (
 )
 
 type Doador struct {
-	Codigo         int
-	Nome           string
-	CPF            string
-	Contato        string
-	TipoDoSangue   TipoSanguineo
-	Rh             RH
-	TipoRHCorretos bool
+	Codigo         int    `json:"codigo"`
+	Nome           string `json:"nome"`
+	CPF            string `json:"cpf"`
+	Contato        string `json:"contato"`
+	TipoDoSangue   string `json:"tipodosangue"`
+	Rh             string `json:"rh"`
+	TipoRHCorretos bool   `json:"tiporhcorretos"`
 }
 
 type Doacao struct {

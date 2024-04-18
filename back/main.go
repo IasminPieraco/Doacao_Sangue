@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"root/handlers"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -43,32 +44,6 @@ func conectarBD() error {
 	return nil
 }
 
-type Dado struct {
-	ID   int    `json:"id"`
-	Nome string `json:"nome"`
-}
-
-func inserirDado(c *gin.Context) {
-	var novoDado Dado
-	if err := c.BindJSON(&novoDado); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// Inserir dados no banco de dados
-	result, err := db.Exec("INSERT INTO tabela (nome) VALUES ($1)", novoDado.Nome)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	// Obter o ID do dado inserido
-	id, _ := result.LastInsertId()
-
-	// Retornar o ID do dado inserido
-	c.JSON(http.StatusCreated, gin.H{"id": id})
-}
-
 func main() {
 	// Estabelecer a conexão com o banco de dados
 	err := conectarBD()
@@ -76,12 +51,15 @@ func main() {
 		fmt.Printf("Erro ao conectar ao banco de dados: %v\n", err)
 		return
 	}
+
 	defer db.Close()
+
+	hander := handlers.NewHandler(db)
 
 	r := gin.Default()
 
 	// Rota para inserir dados no banco de dados
-	r.POST("/dados", inserirDado)
+	r.POST("/dados", hander.InserirDado)
 
 	// Rota de ping de exemplo
 	r.GET("/ping", func(c *gin.Context) {
