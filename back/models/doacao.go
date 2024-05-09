@@ -27,6 +27,7 @@ type Doador struct {
 	TipoDoSangue   string `json:"tipodosangue"`
 	Rh             string `json:"rh"`
 	TipoRHCorretos bool   `json:"tiporhcorretos"`
+	Situacao       string `json:"situacao"`
 }
 
 type Doacao struct {
